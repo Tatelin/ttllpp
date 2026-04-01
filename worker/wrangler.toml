@@ -1,0 +1,18 @@
+name = "vip-dashboard-worker"
+main = "worker.js"
+compatibility_date = "2026-03-01"
+
+# 每天 23:30 UTC = 07:30 UTC+8 (台灣時間)
+# 每天 00:00 UTC = 08:00 UTC+8 (可選第二次更新)
+[triggers]
+crons = ["30 23 * * *"]
+
+# KV 綁定 — 部署後替換為實際的 namespace ID
+[[kv_namespaces]]
+binding = "DASHBOARD_KV"
+id = "YOUR_KV_NAMESPACE_ID"
+
+# 環境變數 — 部署時透過 wrangler secret 設定
+# wrangler secret put NEWS_API_KEY
+# wrangler secret put CLAUDE_API_KEY
+# wrangler secret put ALPHA_VANTAGE_KEY
