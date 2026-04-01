@@ -1,0 +1,6 @@
+node_modules/
+.wrangler/
+pionex-data.json
+.env
+*.log
+.DS_Store
