@@ -1,0 +1,48 @@
+name: Scrape Pionex Data
+
+on:
+  schedule:
+    # 每天 23:25 UTC = 07:25 UTC+8，比主排程早 5 分鐘
+    - cron: '25 23 * * *'
+  workflow_dispatch:  # 允許手動觸發
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install puppeteer
+
+      - name: Scrape Pionex Dual Investment & Savings
+        run: node scripts/scrape-pionex.js
+        env:
+          NODE_OPTIONS: '--max-old-space-size=2048'
+
+      - name: Upload to Cloudflare KV
+        if: success()
+        run: |
+          curl -X PUT \
+            "https://api.cloudflare.com/client/v4/accounts/$CF_ACCOUNT_ID/storage/kv/namespaces/$KV_NAMESPACE_ID/values/pionex-data" \
+            -H "Authorization: Bearer $CF_API_TOKEN" \
+            -H "Content-Type: application/json" \
+            -d @pionex-data.json
+        env:
+          CF_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
+          KV_NAMESPACE_ID: ${{ secrets.KV_NAMESPACE_ID }}
+          CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+
+      - name: Upload artifact (backup)
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pionex-data-${{ github.run_number }}
+          path: pionex-data.json
+          retention-days: 7
