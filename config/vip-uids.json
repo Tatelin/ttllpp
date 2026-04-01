@@ -1,0 +1,9 @@
+{
+  "description": "VIP Dashboard 授權 UID 白名單",
+  "lastUpdated": "2026-04-01",
+  "uids": [
+    { "uid": "88888888", "name": "測試帳號" },
+    { "uid": "65554319", "name": "VIP Client" },
+    { "uid": "64423547", "name": "VIP Client" }
+  ]
+}
