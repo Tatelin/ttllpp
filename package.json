@@ -1,0 +1,19 @@
+{
+  "name": "vip-dashboard",
+  "version": "1.0.0",
+  "description": "VIP Daily Market Dashboard",
+  "private": true,
+  "scripts": {
+    "scrape": "node scripts/scrape-pionex.js",
+    "dev": "npx wrangler pages dev public",
+    "deploy:pages": "npx wrangler pages deploy public --project-name=vip-dashboard",
+    "deploy:worker": "cd worker && npx wrangler deploy",
+    "setup": "node scripts/setup.js"
+  },
+  "devDependencies": {
+    "wrangler": "^3.50.0"
+  },
+  "dependencies": {
+    "puppeteer": "^22.0.0"
+  }
+}
